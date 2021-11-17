@@ -101,7 +101,8 @@ func (s *Server) ServeHTTP(response http.ResponseWriter, request *http.Request) 
 
 // SendMessage broadcast a message to all clients in a channel.
 // If channelName is an empty string, it will broadcast the message to all channels.
-func (s *Server) SendMessage(channelName string, message *Message) {
+func (s *Server) SendMessage(channelName string, message *Message) bool {
+	sent := true
 	if len(channelName) == 0 {
 		s.options.Logger.Print("broadcasting message to all channels.")
 
@@ -117,7 +118,9 @@ func (s *Server) SendMessage(channelName string, message *Message) {
 		s.options.Logger.Printf("message sent to channel '%s'.", channelName)
 	} else {
 		s.options.Logger.Printf("message not sent because channel '%s' has no clients.", channelName)
+		sent = false
 	}
+	return sent
 }
 
 // Restart closes all channels and clients and allow new connections.
