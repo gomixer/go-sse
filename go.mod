@@ -1,3 +1,3 @@
-module github.com/alexandrevicenzi/go-sse
+module github.com/gomixer/go-sse
 
-go 1.11
+go 1.17
