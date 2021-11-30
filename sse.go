@@ -230,13 +230,25 @@ func (s *Server) dispatch() {
 			}
 
 			ch.addClient(c)
-			s.options.Logger.Printf("new client connected to channel '%s'.", ch.name)
+			//s.options.Logger.Printf("new client connected to channel '%s'.", ch.name)
+			go func(name string) {
+				_, err := client.Get("http://liv-presence:8001/conn?c=" + name)
+				if err != nil {
+					s.options.Logger.Printf("error conn presence ch '%s'.", name)
+				}
+			}(c.channel.name[6:])
 
 		// Client disconnected.
 		case c := <-s.removeClient:
 			if ch, exists := s.getChannel(c.channel); exists {
 				ch.removeClient(c)
-				s.options.Logger.Printf("client disconnected from channel '%s'.", ch.name)
+				//s.options.Logger.Printf("client disconnected from channel '%s'.", ch.name)
+				go func(name string) {
+					_, err := client.Get("http://liv-presence:8001/disc?c=" + name)
+					if err != nil {
+						s.options.Logger.Printf("erorr disc presence ch '%s'.", name)
+					}
+				}(c.channel.name[6:])
 
 				if ch.ClientCount() == 0 {
 					s.options.Logger.Printf("channel '%s' has no clients.", ch.name)
