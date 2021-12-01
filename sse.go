@@ -217,6 +217,10 @@ func (s *Server) close() {
 
 func (s *Server) dispatch() {
 	s.options.Logger.Print("server started.")
+	
+	client := &http.Client{
+		Timeout: 300 * time.Millisecond,
+	}
 
 	for {
 		select {
