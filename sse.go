@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"sync"
+	"time"
 )
 
 // Server represents a server sent events server.
@@ -240,7 +241,7 @@ func (s *Server) dispatch() {
 				if err != nil {
 					s.options.Logger.Printf("error conn presence ch '%s'.", name)
 				}
-			}(c.channel.name[6:])
+			}(ch.name[6:])
 
 		// Client disconnected.
 		case c := <-s.removeClient:
@@ -250,9 +251,9 @@ func (s *Server) dispatch() {
 				go func(name string) {
 					_, err := client.Get("http://liv-presence:8001/disc?c=" + name)
 					if err != nil {
-						s.options.Logger.Printf("erorr disc presence ch '%s'.", name)
+						s.options.Logger.Printf("error disc presence ch '%s'.", name)
 					}
-				}(c.channel.name[6:])
+				}(ch.name[6:])
 
 				if ch.ClientCount() == 0 {
 					s.options.Logger.Printf("channel '%s' has no clients.", ch.name)
