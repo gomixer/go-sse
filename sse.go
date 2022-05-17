@@ -241,7 +241,7 @@ func (s *Server) dispatch() {
 				if err != nil {
 					s.options.Logger.Printf("error conn presence ch '%s'.", name)
 				}
-			}(ch.name[6:])
+			}(ch.name[5:])
 
 		// Client disconnected.
 		case c := <-s.removeClient:
@@ -253,7 +253,7 @@ func (s *Server) dispatch() {
 					if err != nil {
 						s.options.Logger.Printf("error disc presence ch '%s'.", name)
 					}
-				}(ch.name[6:])
+				}(ch.name[5:])
 
 				if ch.ClientCount() == 0 {
 					s.options.Logger.Printf("channel '%s' has no clients.", ch.name)
